@@ -1,12 +1,14 @@
-name: clone
+name: deploy
 on: 
-  workflow_dispatch:   
+  push:
+    branches: [main]
+
 jobs:
-  clone:
-    name: Clone
+  deploy:
+    name: Deploy
     runs-on: ubuntu-latest
     steps:
-      - name: Create Initial Deployment
+      - name: Update Deployment
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }} 
@@ -14,7 +16,5 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
           script: |
-              touch ~/.ssh/known_hosts
-              ssh-keyscan -H github.com >> ~/.ssh/known_hosts
               cd /pub/${{secrets.USERNAME}}
-              git clone https://github.com/DelphiHide/cmsc389T-web-template.git
+              git pull
